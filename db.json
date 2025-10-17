@@ -1,0 +1,55 @@
+{
+  "programaAcademico": "",
+  "empresa": {
+    "nombre": "",
+    "razonSocial": "",
+    "domicilio": "",
+    "telefono": "",
+    "sello": ""
+  },
+  "asesorExterno": {
+    "nombre": "",
+    "puesto": "",
+    "email": "",
+    "telefono": ""
+  },
+  "asesorInterno": {
+    "nombre": "",
+    "firma": ""
+  },
+  "directorPA": {
+    "nombre": "",
+    "firma": ""
+  },
+  "datosAlumno": {
+    "matricula": "",
+    "nombre": "",
+    "email": ""
+  },
+  "procesoEvaluado": "",       
+  "nombreProyecto": "",
+  "objetivoProyecto": "",
+  "periodoRealizacion": "",
+  "actividades": [
+    {
+      "id": 1,
+      "descripcion": "",
+      "semanasProgramadas": [1, 2],
+      "semanasEjecutadas": [1]
+    }
+  
+  ],
+  "revisiones": {
+    "asesorExterno": {
+      "primerReporte": { "firma": "", "sello": "" },
+      "segundoReporte": { "firma": "", "sello": "" },
+      "reporteFinal":   { "firma": "", "sello": "" }
+    },
+    "asesorInterno": {
+      "primerReporte":   { "firma": "" },
+      "segundoReporte":  { "firma": "" },
+      "reporteFinal":    { "firma": "" }
+    }
+  },
+  "observaciones": ""
+}
