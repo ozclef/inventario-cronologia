@@ -5,6 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Seguimiento de Estancia/Estadía</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    * {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+h1, h2 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+form section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.2rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border: 1px solid #bbb;
+  padding: 0.4rem;
+  text-align: center;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  background: #0069d9;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0053ba;
+}
+    
+  </style>
+  
 </head>
 <body>
   <form id="formSeguimiento">
@@ -144,5 +213,119 @@
   </form>
 
   <script src="script.js"></script>
+  <script>
+    
+4. JavaScript (script.js)
+// Hover: manejar la tabla de actividades y JSON
+
+let data = null;
+const tblBody = document.querySelector('#tablaActividades tbody');
+const btnAgregar = document.querySelector('#btnAgregar');
+const btnGuardar = document.querySelector('#btnGuardar');
+const btnCargar = document.querySelector('#btnCargar');
+
+function crearFila(act) {
+  const tr = document.createElement('tr');
+  tr.dataset.id = act.id;
+  tr.innerHTML = `
+    <td>${act.id}</td>
+    <td>
+      <input type="text"
+        value="${act.descripcion}"
+        onchange="actualizarActividad(${act.id}, 'descripcion', this.value)"
+      />
+    </td>
+    ${Array.from({ length: 15 }, (_, i) => {
+      const semana = i + 1;
+      const pChecked = act.semanasProgramadas.includes(semana) ? 'checked' : '';
+      const eChecked = act.semanasEjecutadas.includes(semana)   ? 'checked' : '';
+      return `
+        <td>
+          <label>P:<input type="checkbox" ${pChecked}
+            onchange="toggleSemana(${act.id}, 'Programada', ${semana}, this.checked)"
+          /></label>
+          <label>E:<input type="checkbox" ${eChecked}
+            onchange="toggleSemana(${act.id}, 'Ejecutada', ${semana}, this.checked)"
+          /></label>
+        </td>`;
+    }).join('')}
+  `;
+  return tr;
+}
+
+function renderTabla() {
+  tblBody.innerHTML = '';
+  data.actividades.forEach(act => tblBody.appendChild(crearFila(act)));
+}
+
+btnAgregar.addEventListener('click', () => {
+  const id = data.actividades.length + 1;
+  data.actividades.push({
+    id, descripcion: '', semanasProgramadas: [], semanasEjecutadas: []
+  });
+  renderTabla();
+});
+
+function actualizarActividad(id, campo, valor) {
+  const act = data.actividades.find(a => a.id === id);
+  act[campo] = valor;
+}
+
+function toggleSemana(id, tipo, semana, estado) {
+  const act = data.actividades.find(a => a.id === id);
+  const key = tipo === 'Programada' ? 'semanasProgramadas' : 'semanasEjecutadas';
+  if (estado) {
+    if (!act[key].includes(semana)) act[key].push(semana);
+  } else {
+    act[key] = act[key].filter(s => s !== semana);
+  }
+}
+
+btnGuardar.addEventListener('click', () => {
+  // recolectar todo el form en el objeto data
+  const form = document.getElementById('formSeguimiento');
+  new FormData(form).forEach((v, k) => {
+    const path = k.split('.');
+    let obj = data;
+    for (let i = 0; i < path.length - 1; i++) {
+      obj = obj[path[i]];
+    }
+    obj[path[path.length - 1]] = v;
+  });
+  const json = JSON.stringify(data, null, 2);
+  console.log(json);
+  alert('JSON exportado a consola');
+});
+
+btnCargar.addEventListener('click', () => {
+  const texto = prompt('Pega aquí tu JSON:');
+  try {
+    data = JSON.parse(texto);
+    // poblar inputs
+    const form = document.getElementById('formSeguimiento');
+    new FormData(form).forEach((_, k) => {
+      const path = k.split('.');
+      let obj = data;
+      for (let i = 0; i < path.length - 1; i++) {
+        obj = obj[path[i]];
+      }
+      const val = obj[path[path.length - 1]];
+      const input = form.querySelector(`[name="${k}"]`);
+      if (input) input.value = val || '';
+    });
+    renderTabla();
+  } catch (e) {
+    alert('JSON inválido');
+  }
+});
+
+// inicio con esquema vacío
+data = {
+  programaAcademico: "",
+  empresa: { nombre:"", razonSocial:"", domicilio:"", telefono:"", sello:"" },
+  asesorExterno: { nombre:"",
+
+    }};
+  </script>
 </body>
 </html>
