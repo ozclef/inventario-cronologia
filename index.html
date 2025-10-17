@@ -414,6 +414,28 @@ document.addEventListener('DOMContentLoaded', () => {
   buildHeader();
   renderActividades();
 });
+
+// === Guardar automáticamente en localStorage ===
+const form = document.getElementById('formSeguimiento');
+
+// guardar cada vez que se cambia algo
+form.addEventListener('input', () => {
+  const data = formToObject(form);
+  localStorage.setItem('seguimientoForm', JSON.stringify(data));
+});
+
+// al cargar la página, intentar restaurar
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('seguimientoForm');
+  if (saved) {
+    try {
+      const obj = JSON.parse(saved);
+      applyToForm(obj, form);
+      console.log("Datos cargados desde localStorage");
+    } catch(e){ console.error(e); }
+  }
+});
+  
 </script>
 </body>
 </html>
