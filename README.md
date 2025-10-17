@@ -16,6 +16,8 @@ A continuación tienes cuatro artefactos listos para usar o adaptar:
 
 ## 1. JSON (Esquema de Datos)
 
+### // "E-1", "E-2" o "EST"   // ... más actividades
+
 ```json
 {
   "programaAcademico": "",
@@ -45,7 +47,7 @@ A continuación tienes cuatro artefactos listos para usar o adaptar:
     "nombre": "",
     "email": ""
   },
-  "procesoEvaluado": "",        // "E-1", "E-2" o "EST"
+  "procesoEvaluado": "",       
   "nombreProyecto": "",
   "objetivoProyecto": "",
   "periodoRealizacion": "",
@@ -56,7 +58,7 @@ A continuación tienes cuatro artefactos listos para usar o adaptar:
       "semanasProgramadas": [1, 2],
       "semanasEjecutadas": [1]
     }
-    // ... más actividades
+  
   ],
   "revisiones": {
     "asesorExterno": {
