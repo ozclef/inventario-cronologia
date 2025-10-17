@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seguimiento de Estancia/Estadía</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <form id="formSeguimiento">
+    <h1>Formato: Seguimiento de Estancia/Estadía</h1>
+
+    <section>
+      <h2>Datos Generales</h2>
+      <label>Programa Académico:
+        <input type="text" name="programaAcademico" />
+      </label>
+      <fieldset>
+        <legend>Empresa</legend>
+        <label>Nombre:
+          <input type="text" name="empresa.nombre" />
+        </label>
+        <label>Razón Social:
+          <input type="text" name="empresa.razonSocial" />
+        </label>
+        <label>Domicilio:
+          <input type="text" name="empresa.domicilio" />
+        </label>
+        <label>Teléfono:
+          <input type="tel" name="empresa.telefono" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Externo</legend>
+        <label>Nombre:
+          <input type="text" name="asesorExterno.nombre" />
+        </label>
+        <label>Puesto:
+          <input type="text" name="asesorExterno.puesto" />
+        </label>
+        <label>Email:
+          <input type="email" name="asesorExterno.email" />
+        </label>
+        <label>Teléfono:
+          <input type="tel" name="asesorExterno.telefono" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Interno</legend>
+        <label>Nombre:
+          <input type="text" name="asesorInterno.nombre" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Director del P.A.</legend>
+        <label>Nombre:
+          <input type="text" name="directorPA.nombre" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Alumno</legend>
+        <label>Matrícula:
+          <input type="text" name="datosAlumno.matricula" />
+        </label>
+        <label>Nombre:
+          <input type="text" name="datosAlumno.nombre" />
+        </label>
+        <label>Email:
+          <input type="email" name="datosAlumno.email" />
+        </label>
+      </fieldset>
+      <label>Proceso Evaluado:
+        <select name="procesoEvaluado">
+          <option value="E-1">Estancia 1 (E-1)</option>
+          <option value="E-2">Estancia 2 (E-2)</option>
+          <option value="EST">Estadía (EST)</option>
+        </select>
+      </label>
+      <label>Nombre del Proyecto:
+        <input type="text" name="nombreProyecto" />
+      </label>
+      <label>Objetivo del Proyecto:
+        <textarea name="objetivoProyecto" rows="2"></textarea>
+      </label>
+      <label>Periodo de Realización:
+        <input type="text" name="periodoRealizacion" />
+      </label>
+    </section>
+
+    <section>
+      <h2>Actividad Semanal</h2>
+      <table id="tablaActividades">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Descripción</th>
+            <th colspan="15">Semanas 1–15</th>
+          </tr>
+          <tr>
+            <th></th><th></th>
+            <!-- generar del 1 al 15 -->
+            <script>
+              for(let w=1;w<=15;w++){
+                document.write(`<th>${w}</th>`);
+              }
+            </script>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- filas dinámicas desde JS -->
+        </tbody>
+      </table>
+      <button type="button" id="btnAgregar">Agregar Actividad</button>
+    </section>
+
+    <section>
+      <h2>Revisiones</h2>
+      <fieldset>
+        <legend>Asesor Externo</legend>
+        <label>Primer Reporte - Firma:
+          <input type="text" name="revisiones.asesorExterno.primerReporte.firma" />
+        </label>
+        <label>Sello:
+          <input type="text" name="revisiones.asesorExterno.primerReporte.sello" />
+        </label>
+        <!-- repetir para segundo y final -->
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Interno</legend>
+        <label>Primer Reporte - Firma:
+          <input type="text" name="revisiones.asesorInterno.primerReporte.firma" />
+        </label>
+        <!-- repetir para segundo y final -->
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Observaciones</h2>
+      <textarea name="observaciones" rows="3"></textarea>
+    </section>
+
+    <button type="button" id="btnCargar">Cargar JSON</button>
+    <button type="button" id="btnGuardar">Exportar JSON</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>
