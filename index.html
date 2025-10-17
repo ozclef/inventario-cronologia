@@ -228,6 +228,24 @@ button:hover {
   
   <script src="script.js"></script>
   <script>
+
+
+
+    fetch('db.json')
+  .then(res => res.json())
+  .then(data => console.log(data))
+/*
+funcionará bien en tu GitHub Pages 👉 https://ozclef.github.io/inventario-cronologia/
+
+Si en cambio lo estás trayendo con la URL directa (como https://github.com/ozclef/inventario-cronologia/raw/...), entonces tu fetch debería ser así:
+
+js
+Copiar código
+*/
+fetch('https://raw.githubusercontent.com/ozclef/inventario-cronologia/main/db.json')
+  .then(res => res.json())
+  .then(data => console.log(data))
+    
     /*
 4. JavaScript (script.js)
 // Hover: manejar la tabla de actividades y JSON
