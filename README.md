@@ -2,7 +2,592 @@
 
 ----
 
-## 
+# inventario-cronologia
+
+---------
+_________
+
+
+Sistema de Inventario con Control de Caducidades y Cronología de Actividades semanales (1–15)  
+
+Este proyecto ofrece un seguimiento detallado de lotes en inventario, alertas de caducidad, búsquedas avanzadas y registro cronológico de actividades semanales. Ideal para entornos académicos y pequeñas empresas que requieran monitorear stock, fechas de caducidad y generar reportes automáticos.
+
+---------
+
+## Tabla de Contenidos
+
+1. [Características Principales](#características-principales)  
+2. [Tecnologías](#tecnologías)  
+3. [Quick Start](#quick-start)  
+4. [Estructura del Proyecto](#estructura-del-proyecto)  
+5. [Uso](#uso)  
+6. [Configuración Adicional](#configuración-adicional)  
+7. [Roadmap / Mejoras Futuras](#roadmap--mejoras-futuras)  
+8. [Contribuir](#contribuir)  
+9. [Licencia](#licencia)  
+10. [Contacto](#contacto)  
+
+---
+
+## Características Principales
+
+- Gestión de inventario por lotes  
+- Control de fechas de caducidad con alertas programadas (email, push, Slack)  
+- Escaneo de códigos de barras / QR con QuaggaJS (WebRTC)  
+- Búsquedas filtradas por producto, lote, precio y caducidad  
+- Cronología de actividades semanales (1–15), con marcado programado/ejecutado  
+- Importación de datos desde CSV/Excel y exportación a JSON, PDF, XLSX  
+- Dashboard con gráficas de stock vs. caducidad (Chart.js)  
+- UI responsive “mobile first” basada en SCSS modular  
+- PWA: modo offline, sincronización y manifest.json  
+- Autenticación basada en roles (JWT): admin, manager, usuario  
+- API REST (Node.js/Express o Serverless) con SQLite o MongoDB Atlas  
+
+---
+
+## Tecnologías
+
+- Frontend  
+  - HTML5 semántico  
+  - JavaScript (ES6+)  
+  - SCSS modular  
+  - Chart.js para visualización  
+  - QuaggaJS para escaneo de códigos  
+  - Service Worker / PWA  
+
+- Backend (opcional)  
+  - Node.js + Express  
+  - Serverless (Netlify Functions / Vercel)  
+  - SQLite embebido o MongoDB Atlas  
+  - JWT para autenticación  
+
+- Herramientas  
+  - npm / Yarn  
+  - ESLint + Prettier  
+  - Jest (tests unitarios)  
+  - Cypress (E2E)  
+  - GitHub Actions (CI/CD)  
+  - Docker (contenedores)  
+
+---
+
+## Quick Start
+
+1. Clona el repositorio  
+   ```bash
+   git clone https://github.com/ozclef/inventario-cronologia.git
+   cd inventario-cronologia
+   ```
+
+2. Instala dependencias  
+   ```bash
+   npm install
+   ```
+
+3. Compila SCSS (watch mode)  
+   ```bash
+   npm run build:css
+   ```
+
+4. Inicia servidor local  
+   ```bash
+   npm run serve
+   ```
+
+5. Abre `http://localhost:3000` en tu navegador  
+
+---
+
+## Estructura del Proyecto
+
+```
+inventario-cronologia/
+├─ public/
+│  ├─ index.html
+│  └─ manifest.json
+├─ src/
+│  ├─ scss/
+│  │  ├─ _variables.scss
+│  │  ├─ _mixins.scss
+│  │  ├─ _components.scss
+│  │  └─ main.scss
+│  ├─ js/
+│  │  ├─ script.js
+│  │  ├─ api.js
+│  │  └─ utils.js
+│  └─ images/
+├─ data/
+│  └─ plantilla.json
+├─ tests/
+│  ├─ unit/
+│  └─ e2e/
+├─ .eslintrc.js
+├─ .prettierrc
+├─ Dockerfile
+├─ package.json
+├─ README.md
+└─ LICENSE
+```
+
+---
+
+## Uso
+
+1. **Cargar / Guardar datos**  
+   - Botón **Cargar JSON**: pega tu estructura JSON y poblala en el formulario.  
+   - Botón **Exportar JSON**: convierte el estado actual en JSON legible para tu repositorio.
+
+2. **Registro Cronológico**  
+   - Agrega actividades semanales con “Agregar Actividad”.  
+   - Marca programación (P) y ejecución (E) por semana.
+
+3. **Alertas de Caducidad**  
+   - Configura umbral en `script.js` (por ejemplo, 7 días antes).  
+   - Recibe notificaciones por email o integraciones Webhook.
+
+4. **Escaneo de Códigos**  
+   - Descomenta el método `initBarcodeScanner()` en `script.js`.  
+   - Usa cámara para leer barcode/QR y ubica lote en inventario.
+
+5. **Dashboard**  
+   - Abre `dashboard.html` para ver gráficas de stock vs. caducidad.
+
+---
+
+## Configuración Adicional
+
+- Variables de entorno (`.env`) para API y servicios de notificación  
+- Claves SMTP o tokens de Slack/Telegram  
+- Credenciales de MongoDB Atlas (si aplica)  
+
+---
+
+## Roadmap / Mejoras Futuras
+
+- Integración con ERP (QuickBooks, Odoo)  
+- Módulo de predicción de demanda (ML)  
+- Estadísticas avanzadas en BigQuery  
+- Gamificación: badges y ranking de “0 caducidades”  
+- Internacionalización (i18n) con i18next  
+
+---
+
+## Contribuir
+
+1. Haz fork de este repositorio  
+2. Crea tu rama feature: `git checkout -b feature/tu-mejora`  
+3. Commit de tus cambios: `git commit -m "feat: descripción breve"`  
+4. Push a tu rama: `git push origin feature/tu-mejora`  
+5. Abre un Pull Request describiendo tu mejora  
+
+Lee el archivo [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.  
+
+---
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.  
+
+---
+
+## Contacto
+
+Oscar Cruz Díaz — oscar.cruz@example.com  
+Repositorio: https://github.com/ozclef/inventario-cronologia  
+Proyecto Politécnica de Tlaxcala — Sistema de Gestión de la Calidad  
+
+---
+
+¡Gracias por tu interés! Siéntete libre de sugerir mejoras o reportar issues.
+
+
+# inventario-cronologia
+
+Sistema de Inventario con Control de Caducidades y Cronología de Actividades semanales (1–15)  
+
+Este proyecto ofrece un seguimiento detallado de lotes en inventario, alertas de caducidad, búsquedas avanzadas y registro cronológico de actividades semanales. Ideal para entornos académicos y pequeñas empresas que requieran monitorear stock, fechas de caducidad y generar reportes automáticos.
+
+---
+
+## Tabla de Contenidos
+
+1. [Características Principales](#características-principales)  
+2. [Tecnologías](#tecnologías)  
+3. [Quick Start](#quick-start)  
+4. [Estructura del Proyecto](#estructura-del-proyecto)  
+5. [Uso](#uso)  
+6. [Configuración Adicional](#configuración-adicional)  
+7. [Roadmap / Mejoras Futuras](#roadmap--mejoras-futuras)  
+8. [Contribuir](#contribuir)  
+9. [Licencia](#licencia)  
+10. [Contacto](#contacto)  
+
+---
+
+## Características Principales
+
+- Gestión de inventario por lotes  
+- Control de fechas de caducidad con alertas programadas (email, push, Slack)  
+- Escaneo de códigos de barras / QR con QuaggaJS (WebRTC)  
+- Búsquedas filtradas por producto, lote, precio y caducidad  
+- Cronología de actividades semanales (1–15), con marcado programado/ejecutado  
+- Importación de datos desde CSV/Excel y exportación a JSON, PDF, XLSX  
+- Dashboard con gráficas de stock vs. caducidad (Chart.js)  
+- UI responsive “mobile first” basada en SCSS modular  
+- PWA: modo offline, sincronización y manifest.json  
+- Autenticación basada en roles (JWT): admin, manager, usuario  
+- API REST (Node.js/Express o Serverless) con SQLite o MongoDB Atlas  
+
+---
+
+## Tecnologías
+
+- Frontend  
+  - HTML5 semántico  
+  - JavaScript (ES6+)  
+  - SCSS modular  
+  - Chart.js para visualización  
+  - QuaggaJS para escaneo de códigos  
+  - Service Worker / PWA  
+
+- Backend (opcional)  
+  - Node.js + Express  
+  - Serverless (Netlify Functions / Vercel)  
+  - SQLite embebido o MongoDB Atlas  
+  - JWT para autenticación  
+
+- Herramientas  
+  - npm / Yarn  
+  - ESLint + Prettier  
+  - Jest (tests unitarios)  
+  - Cypress (E2E)  
+  - GitHub Actions (CI/CD)  
+  - Docker (contenedores)  
+
+---
+
+## Quick Start
+
+1. Clona el repositorio  
+   ```bash
+   git clone https://github.com/ozclef/inventario-cronologia.git
+   cd inventario-cronologia
+   ```
+
+2. Instala dependencias  
+   ```bash
+   npm install
+   ```
+
+3. Compila SCSS (watch mode)  
+   ```bash
+   npm run build:css
+   ```
+
+4. Inicia servidor local  
+   ```bash
+   npm run serve
+   ```
+
+5. Abre `http://localhost:3000` en tu navegador  
+
+---
+
+## Estructura del Proyecto
+
+```
+inventario-cronologia/
+├─ public/
+│  ├─ index.html
+│  └─ manifest.json
+├─ src/
+│  ├─ scss/
+│  │  ├─ _variables.scss
+│  │  ├─ _mixins.scss
+│  │  ├─ _components.scss
+│  │  └─ main.scss
+│  ├─ js/
+│  │  ├─ script.js
+│  │  ├─ api.js
+│  │  └─ utils.js
+│  └─ images/
+├─ data/
+│  └─ plantilla.json
+├─ tests/
+│  ├─ unit/
+│  └─ e2e/
+├─ .eslintrc.js
+├─ .prettierrc
+├─ Dockerfile
+├─ package.json
+├─ README.md
+└─ LICENSE
+```
+
+---
+
+## Uso
+
+1. **Cargar / Guardar datos**  
+   - Botón **Cargar JSON**: pega tu estructura JSON y poblala en el formulario.  
+   - Botón **Exportar JSON**: convierte el estado actual en JSON legible para tu repositorio.
+
+2. **Registro Cronológico**  
+   - Agrega actividades semanales con “Agregar Actividad”.  
+   - Marca programación (P) y ejecución (E) por semana.
+
+3. **Alertas de Caducidad**  
+   - Configura umbral en `script.js` (por ejemplo, 7 días antes).  
+   - Recibe notificaciones por email o integraciones Webhook.
+
+4. **Escaneo de Códigos**  
+   - Descomenta el método `initBarcodeScanner()` en `script.js`.  
+   - Usa cámara para leer barcode/QR y ubica lote en inventario.
+
+5. **Dashboard**  
+   - Abre `dashboard.html` para ver gráficas de stock vs. caducidad.
+
+---
+
+## Configuración Adicional
+
+- Variables de entorno (`.env`) para API y servicios de notificación  
+- Claves SMTP o tokens de Slack/Telegram  
+- Credenciales de MongoDB Atlas (si aplica)  
+
+---
+
+## Roadmap / Mejoras Futuras
+
+- Integración con ERP (QuickBooks, Odoo)  
+- Módulo de predicción de demanda (ML)  
+- Estadísticas avanzadas en BigQuery  
+- Gamificación: badges y ranking de “0 caducidades”  
+- Internacionalización (i18n) con i18next  
+
+---
+
+## Contribuir
+
+1. Haz fork de este repositorio  
+2. Crea tu rama feature: `git checkout -b feature/tu-mejora`  
+3. Commit de tus cambios: `git commit -m "feat: descripción breve"`  
+4. Push a tu rama: `git push origin feature/tu-mejora`  
+5. Abre un Pull Request describiendo tu mejora  
+
+Lee el archivo [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.  
+
+---
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.  
+
+---
+
+## Contacto
+
+Oscar Cruz Díaz — oscar.cruz@example.com  
+Repositorio: https://github.com/ozclef/inventario-cronologia  
+Proyecto Politécnica de Tlaxcala — Sistema de Gestión de la Calidad  
+
+---
+
+¡Gracias por tu interés! Siéntete libre de sugerir mejoras o reportar issues.# inventario-cronologia
+
+Sistema de Inventario con Control de Caducidades y Cronología de Actividades semanales (1–15)  
+
+Este proyecto ofrece un seguimiento detallado de lotes en inventario, alertas de caducidad, búsquedas avanzadas y registro cronológico de actividades semanales. Ideal para entornos académicos y pequeñas empresas que requieran monitorear stock, fechas de caducidad y generar reportes automáticos.
+
+---
+
+## Tabla de Contenidos
+
+1. [Características Principales](#características-principales)  
+2. [Tecnologías](#tecnologías)  
+3. [Quick Start](#quick-start)  
+4. [Estructura del Proyecto](#estructura-del-proyecto)  
+5. [Uso](#uso)  
+6. [Configuración Adicional](#configuración-adicional)  
+7. [Roadmap / Mejoras Futuras](#roadmap--mejoras-futuras)  
+8. [Contribuir](#contribuir)  
+9. [Licencia](#licencia)  
+10. [Contacto](#contacto)  
+
+---
+
+## Características Principales
+
+- Gestión de inventario por lotes  
+- Control de fechas de caducidad con alertas programadas (email, push, Slack)  
+- Escaneo de códigos de barras / QR con QuaggaJS (WebRTC)  
+- Búsquedas filtradas por producto, lote, precio y caducidad  
+- Cronología de actividades semanales (1–15), con marcado programado/ejecutado  
+- Importación de datos desde CSV/Excel y exportación a JSON, PDF, XLSX  
+- Dashboard con gráficas de stock vs. caducidad (Chart.js)  
+- UI responsive “mobile first” basada en SCSS modular  
+- PWA: modo offline, sincronización y manifest.json  
+- Autenticación basada en roles (JWT): admin, manager, usuario  
+- API REST (Node.js/Express o Serverless) con SQLite o MongoDB Atlas  
+
+---
+
+## Tecnologías
+
+- Frontend  
+  - HTML5 semántico  
+  - JavaScript (ES6+)  
+  - SCSS modular  
+  - Chart.js para visualización  
+  - QuaggaJS para escaneo de códigos  
+  - Service Worker / PWA  
+
+- Backend (opcional)  
+  - Node.js + Express  
+  - Serverless (Netlify Functions / Vercel)  
+  - SQLite embebido o MongoDB Atlas  
+  - JWT para autenticación  
+
+- Herramientas  
+  - npm / Yarn  
+  - ESLint + Prettier  
+  - Jest (tests unitarios)  
+  - Cypress (E2E)  
+  - GitHub Actions (CI/CD)  
+  - Docker (contenedores)  
+
+---
+
+## Quick Start
+
+1. Clona el repositorio  
+   ```bash
+   git clone https://github.com/ozclef/inventario-cronologia.git
+   cd inventario-cronologia
+   ```
+
+2. Instala dependencias  
+   ```bash
+   npm install
+   ```
+
+3. Compila SCSS (watch mode)  
+   ```bash
+   npm run build:css
+   ```
+
+4. Inicia servidor local  
+   ```bash
+   npm run serve
+   ```
+
+5. Abre `http://localhost:3000` en tu navegador  
+
+---
+
+## Estructura del Proyecto
+
+```
+inventario-cronologia/
+├─ public/
+│  ├─ index.html
+│  └─ manifest.json
+├─ src/
+│  ├─ scss/
+│  │  ├─ _variables.scss
+│  │  ├─ _mixins.scss
+│  │  ├─ _components.scss
+│  │  └─ main.scss
+│  ├─ js/
+│  │  ├─ script.js
+│  │  ├─ api.js
+│  │  └─ utils.js
+│  └─ images/
+├─ data/
+│  └─ plantilla.json
+├─ tests/
+│  ├─ unit/
+│  └─ e2e/
+├─ .eslintrc.js
+├─ .prettierrc
+├─ Dockerfile
+├─ package.json
+├─ README.md
+└─ LICENSE
+```
+
+---
+
+## Uso
+
+1. **Cargar / Guardar datos**  
+   - Botón **Cargar JSON**: pega tu estructura JSON y poblala en el formulario.  
+   - Botón **Exportar JSON**: convierte el estado actual en JSON legible para tu repositorio.
+
+2. **Registro Cronológico**  
+   - Agrega actividades semanales con “Agregar Actividad”.  
+   - Marca programación (P) y ejecución (E) por semana.
+
+3. **Alertas de Caducidad**  
+   - Configura umbral en `script.js` (por ejemplo, 7 días antes).  
+   - Recibe notificaciones por email o integraciones Webhook.
+
+4. **Escaneo de Códigos**  
+   - Descomenta el método `initBarcodeScanner()` en `script.js`.  
+   - Usa cámara para leer barcode/QR y ubica lote en inventario.
+
+5. **Dashboard**  
+   - Abre `dashboard.html` para ver gráficas de stock vs. caducidad.
+
+---
+
+## Configuración Adicional
+
+- Variables de entorno (`.env`) para API y servicios de notificación  
+- Claves SMTP o tokens de Slack/Telegram  
+- Credenciales de MongoDB Atlas (si aplica)  
+
+---
+
+## Roadmap / Mejoras Futuras
+
+- Integración con ERP (QuickBooks, Odoo)  
+- Módulo de predicción de demanda (ML)  
+- Estadísticas avanzadas en BigQuery  
+- Gamificación: badges y ranking de “0 caducidades”  
+- Internacionalización (i18n) con i18next  
+
+---
+
+## Contribuir
+
+1. Haz fork de este repositorio  
+2. Crea tu rama feature: `git checkout -b feature/tu-mejora`  
+3. Commit de tus cambios: `git commit -m "feat: descripción breve"`  
+4. Push a tu rama: `git push origin feature/tu-mejora`  
+5. Abre un Pull Request describiendo tu mejora  
+
+Lee el archivo [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.  
+
+---
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.  
+
+---
+
+## Contacto
+
+Oscar Cruz Díaz — oscar.cruz@example.com  
+Repositorio: https://github.com/ozclef/inventario-cronologia  
+Proyecto Politécnica de Tlaxcala — Sistema de Gestión de la Calidad  
+
+---
+
+¡Gracias por tu interés! Siéntete libre de sugerir mejoras o reportar issues.
+
+__________
 ## Plantilla de Seguimiento de Estancia/Estadía en JSON, HTML, CSS y JavaScript
 
 A continuación tienes cuatro artefactos listos para usar o adaptar:
