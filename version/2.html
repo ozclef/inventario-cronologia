@@ -1,0 +1,374 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Formato: Seguimiento de Estancia/Estadía</title>
+  <style>
+    body { font-family: system-ui, Arial; padding: 18px; max-width:1200px; margin:auto }
+    fieldset { margin-bottom:12px; padding:10px }
+    table { width:100%; border-collapse:collapse; margin-bottom:10px }
+    th, td { border:1px solid #ddd; padding:6px; text-align:center }
+    textarea, input[type="text"], input[type="email"], select { width:100% }
+    .left { text-align:left }
+    button { margin-right:8px }
+  </style>
+</head>
+<body>
+  <form id="formSeguimiento">
+    <h1>Formato: Seguimiento de Estancia/Estadía</h1>
+
+    <section>
+      <h2>Datos Generales</h2>
+      <label>Programa Académico:
+        <input type="text" name="programaAcademico" />
+      </label>
+      <fieldset>
+        <legend>Empresa</legend>
+        <label>Nombre:
+          <input type="text" name="empresa.nombre" />
+        </label>
+        <label>Razón Social:
+          <input type="text" name="empresa.razonSocial" />
+        </label>
+        <label>Domicilio:
+          <input type="text" name="empresa.domicilio" />
+        </label>
+        <label>Teléfono:
+          <input type="tel" name="empresa.telefono" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Externo</legend>
+        <label>Nombre:
+          <input type="text" name="asesorExterno.nombre" />
+        </label>
+        <label>Puesto:
+          <input type="text" name="asesorExterno.puesto" />
+        </label>
+        <label>Email:
+          <input type="email" name="asesorExterno.email" />
+        </label>
+        <label>Teléfono:
+          <input type="tel" name="asesorExterno.telefono" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Interno</legend>
+        <label>Nombre:
+          <input type="text" name="asesorInterno.nombre" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Director del P.A.</legend>
+        <label>Nombre:
+          <input type="text" name="directorPA.nombre" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Alumno</legend>
+        <label>Matrícula:
+          <input type="text" name="datosAlumno.matricula" />
+        </label>
+        <label>Nombre:
+          <input type="text" name="datosAlumno.nombre" />
+        </label>
+        <label>Email:
+          <input type="email" name="datosAlumno.email" />
+        </label>
+      </fieldset>
+      <label>Proceso Evaluado:
+        <select name="procesoEvaluado">
+          <option value="E-1">Estancia 1 (E-1)</option>
+          <option value="E-2">Estancia 2 (E-2)</option>
+          <option value="EST">Estadía (EST)</option>
+        </select>
+      </label>
+      <label>Nombre del Proyecto:
+        <input type="text" name="nombreProyecto" />
+      </label>
+      <label>Objetivo del Proyecto:
+        <textarea name="objetivoProyecto" rows="2"></textarea>
+      </label>
+      <label>Periodo de Realización:
+        <input type="text" name="periodoRealizacion" />
+      </label>
+    </section>
+
+    <section>
+      <h2>Actividad Semanal</h2>
+      <table id="tablaActividades">
+        <thead id="theadSemanas"></thead>
+        <tbody id="tbodyActividades"></tbody>
+      </table>
+      <button type="button" id="btnAgregar">Agregar Actividad</button>
+    </section>
+
+    <section>
+      <h2>Revisiones</h2>
+      <fieldset>
+        <legend>Asesor Externo</legend>
+        <label>Primer Reporte - Firma:
+          <input type="text" name="revisiones.asesorExterno.primerReporte.firma" />
+        </label>
+        <label>Sello:
+          <input type="text" name="revisiones.asesorExterno.primerReporte.sello" />
+        </label>
+        <label>Segundo Reporte - Firma:
+          <input type="text" name="revisiones.asesorExterno.segundoReporte.firma" />
+        </label>
+        <label>Final - Firma:
+          <input type="text" name="revisiones.asesorExterno.final.firma" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Interno</legend>
+        <label>Primer Reporte - Firma:
+          <input type="text" name="revisiones.asesorInterno.primerReporte.firma" />
+        </label>
+        <label>Segundo Reporte - Firma:
+          <input type="text" name="revisiones.asesorInterno.segundoReporte.firma" />
+        </label>
+        <label>Final - Firma:
+          <input type="text" name="revisiones.asesorInterno.final.firma" />
+        </label>
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Observaciones</h2>
+      <textarea name="observaciones" rows="3"></textarea>
+    </section>
+
+    <div style="margin-top:12px">
+      <button type="button" id="btnCargar">Cargar JSON</button>
+      <button type="button" id="btnGuardar">Exportar JSON</button>
+      <button type="button" id="btnImprimir">Imprimir PDF</button>
+    </div>
+  </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const WEEKS = 15;
+  const thead = document.getElementById('theadSemanas');
+  const tbody = document.getElementById('tbodyActividades');
+  const btnAgregar = document.getElementById('btnAgregar');
+  const btnGuardar = document.getElementById('btnGuardar');
+  const btnCargar = document.getElementById('btnCargar');
+  const btnImprimir = document.getElementById('btnImprimir');
+  let actividades = []; // estado local: {id, descripcion, semanas: [bool*15]}
+
+  // Generar encabezado
+  function buildHeader(){
+    const tr1 = document.createElement('tr');
+    tr1.innerHTML = '<th>#</th><th class="left">Descripción</th><th colspan="'+WEEKS+'">Semanas 1–'+WEEKS+'</th>';
+    const tr2 = document.createElement('tr');
+    tr2.appendChild(document.createElement('th'));
+    tr2.appendChild(document.createElement('th'));
+    for(let w=1; w<=WEEKS; w++){
+      const th = document.createElement('th');
+      th.textContent = w;
+      tr2.appendChild(th);
+    }
+    thead.innerHTML = '';
+    thead.appendChild(tr1);
+    thead.appendChild(tr2);
+  }
+
+  // Render tabla
+  function renderActividades(){
+    tbody.innerHTML = '';
+    actividades.forEach((act, idx) => {
+      const tr = document.createElement('tr');
+      const tdIndex = document.createElement('td');
+      tdIndex.textContent = idx+1;
+      const tdDesc = document.createElement('td');
+      tdDesc.className = 'left';
+      const inpDesc = document.createElement('input');
+      inpDesc.type = 'text';
+      inpDesc.value = act.descripcion || '';
+      inpDesc.style.width = '100%';
+      inpDesc.addEventListener('input', e => act.descripcion = e.target.value);
+      tdDesc.appendChild(inpDesc);
+      tr.appendChild(tdIndex);
+      tr.appendChild(tdDesc);
+      for(let w=0; w<WEEKS; w++){
+        const td = document.createElement('td');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !!act.semanas[w];
+        cb.addEventListener('change', e => act.semanas[w] = e.target.checked);
+        td.appendChild(cb);
+        tr.appendChild(td);
+      }
+      const tdRemove = document.createElement('td');
+      tdRemove.colSpan = 0;
+      // botón eliminar
+      const btnRem = document.createElement('button');
+      btnRem.type = 'button';
+      btnRem.textContent = 'Eliminar';
+      btnRem.style.marginLeft = '8px';
+      btnRem.addEventListener('click', () => {
+        actividades.splice(idx, 1);
+        renderActividades();
+      });
+      tdRemove.appendChild(btnRem);
+      // añadimos una celda extra para el botón (oculto en tamaños pequeños)
+      tr.appendChild(tdRemove);
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Agregar actividad nueva
+  btnAgregar.addEventListener('click', () => {
+    actividades.push({ descripcion: '', semanas: Array(WEEKS).fill(false) });
+    renderActividades();
+  });
+
+  // Serializar inputs con nombres tipo "empresa.nombre" a objeto anidado
+  function setNested(obj, path, value){
+    const parts = path.split('.');
+    let cur = obj;
+    for(let i=0;i<parts.length;i++){
+      const p = parts[i];
+      if(i === parts.length -1){
+        cur[p] = value;
+      } else {
+        if(!cur[p] || typeof cur[p] !== 'object') cur[p] = {};
+        cur = cur[p];
+      }
+    }
+  }
+
+  function formToObject(form){
+    const data = {};
+    const elements = Array.from(form.elements).filter(el => el.name && !el.disabled);
+    elements.forEach(el => {
+      const name = el.name;
+      if(el.type === 'checkbox') {
+        // we've not created checkboxes for form inputs - only for activities
+        setNested(data, name, el.checked);
+      } else if(el.tagName === 'SELECT') {
+        setNested(data, name, el.value);
+      } else if(el.type === 'radio') {
+        if(el.checked) setNested(data, name, el.value);
+      } else if(el.type === 'button') {
+        // skip
+      } else if(el.type === 'file') {
+        // skip
+      } else {
+        // texto, textarea, email, tel...
+        setNested(data, name, el.value);
+      }
+    });
+
+    // añadir actividades desde estado
+    data.actividades = actividades.map((a) => ({
+      descripcion: a.descripcion,
+      semanas: a.semanas.slice()
+    }));
+    return data;
+  }
+
+  // Rellenar inputs desde objeto (reverse)
+  function applyToForm(data, form){
+    function assignRec(obj, prefix=''){
+      for(const k in obj){
+        const val = obj[k];
+        const name = prefix ? (prefix + '.' + k) : k;
+        if(val && typeof val === 'object' && !Array.isArray(val)){
+          assignRec(val, name);
+        } else {
+          // buscar elemento por name
+          const el = form.querySelector(`[name="${CSS.escape(name)}"]`);
+          if(el){
+            if(el.type === 'checkbox') el.checked = !!val;
+            else el.value = (val === undefined || val === null) ? '' : val;
+          }
+        }
+      }
+    }
+    assignRec(data);
+    // actividades
+    if(Array.isArray(data.actividades)){
+      actividades = data.actividades.map(a => ({
+        descripcion: a.descripcion || '',
+        semanas: Array.isArray(a.semanas) ? a.semanas.slice(0,15).concat(Array(15 - (a.semanas||[]).length).fill(false)) : Array(15).fill(false)
+      }));
+    } else {
+      actividades = [];
+    }
+    renderActividades();
+  }
+
+  // Descargar JSON (export)
+  function downloadJSON(obj, filename='seguimiento.json'){
+    const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Botón Exportar
+  btnGuardar.addEventListener('click', () => {
+    const form = document.getElementById('formSeguimiento');
+    const obj = formToObject(form);
+    downloadJSON(obj, 'seguimiento.json');
+  });
+
+  // Botón Imprimir (usa print)
+  btnImprimir.addEventListener('click', () => window.print());
+
+  // Botón Cargar: pedir URL o usar local db.json
+  btnCargar.addEventListener('click', async () => {
+    const url = prompt('Introduce la URL RAW del JSON o deja vacío para usar "db.json" local:', '');
+    const fetchUrl = url && url.trim() ? url.trim() : 'db.json';
+    try {
+      const res = await fetch(fetchUrl);
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      applyToForm(data, document.getElementById('formSeguimiento'));
+      alert('JSON cargado correctamente');
+    } catch (err) {
+      console.error(err);
+      alert('No se pudo cargar el JSON. Revisa CORS o la URL. ('+err.message+')');
+    }
+  });
+
+  // inicializar encabezado y tabla vacía
+  buildHeader();
+  renderActividades();
+});
+</script>
+</body>
+</html>
+
+
+<!--------
+
+
+
+{
+  "programaAcademico": "Ingeniería X",
+  "empresa": { "nombre": "ACME", "razonSocial": "...", "domicilio":"...", "telefono":"..." },
+  "asesorExterno": { "nombre":"", "puesto":"", "email":"", "telefono":"" },
+  "asesorInterno": { "nombre":"" },
+  "directorPA": { "nombre": "" },
+  "datosAlumno": { "matricula":"", "nombre":"", "email":"" },
+  "procesoEvaluado": "E-1",
+  "nombreProyecto": "",
+  "objetivoProyecto": "",
+  "periodoRealizacion": "",
+  "actividades": [
+    { "descripcion":"Actividad A", "semanas":[true,false,...] }
+  ],
+  "revisiones": {
+    "asesorExterno": { "primerReporte": {"firma":"","sello":""}, "segundoReporte": {"firma":""}, "final": {"firma": ""} },
+    "asesorInterno": { "primerReporte": {"firma":""}, "segundoReporte": {"firma":""}, "final": {"firma":""} }
+  },
+  "observaciones": ""
+}
