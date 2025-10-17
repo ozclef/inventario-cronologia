@@ -1,1 +1,416 @@
 # inventario-cronologia
+
+----
+
+## 
+## Plantilla de Seguimiento de Estancia/Estadía en JSON, HTML, CSS y JavaScript
+
+A continuación tienes cuatro artefactos listos para usar o adaptar:
+
+1. **JSON**: Esquema de datos que refleja cada campo del formato.
+2. **HTML**: Estructura del formulario y tabla de actividades semanales.
+3. **CSS**: Estilos básicos para una presentación limpia y responsiva.
+4. **JavaScript**: Lógica para cargar/guardar el JSON y manejar la tabla de actividades.
+
+---
+
+## 1. JSON (Esquema de Datos)
+
+```json
+{
+  "programaAcademico": "",
+  "empresa": {
+    "nombre": "",
+    "razonSocial": "",
+    "domicilio": "",
+    "telefono": "",
+    "sello": ""
+  },
+  "asesorExterno": {
+    "nombre": "",
+    "puesto": "",
+    "email": "",
+    "telefono": ""
+  },
+  "asesorInterno": {
+    "nombre": "",
+    "firma": ""
+  },
+  "directorPA": {
+    "nombre": "",
+    "firma": ""
+  },
+  "datosAlumno": {
+    "matricula": "",
+    "nombre": "",
+    "email": ""
+  },
+  "procesoEvaluado": "",        // "E-1", "E-2" o "EST"
+  "nombreProyecto": "",
+  "objetivoProyecto": "",
+  "periodoRealizacion": "",
+  "actividades": [
+    {
+      "id": 1,
+      "descripcion": "",
+      "semanasProgramadas": [1, 2],
+      "semanasEjecutadas": [1]
+    }
+    // ... más actividades
+  ],
+  "revisiones": {
+    "asesorExterno": {
+      "primerReporte": { "firma": "", "sello": "" },
+      "segundoReporte": { "firma": "", "sello": "" },
+      "reporteFinal":   { "firma": "", "sello": "" }
+    },
+    "asesorInterno": {
+      "primerReporte":   { "firma": "" },
+      "segundoReporte":  { "firma": "" },
+      "reporteFinal":    { "firma": "" }
+    }
+  },
+  "observaciones": ""
+}
+```
+
+---
+
+## 2. HTML
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seguimiento de Estancia/Estadía</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <form id="formSeguimiento">
+    <h1>Formato: Seguimiento de Estancia/Estadía</h1>
+
+    <section>
+      <h2>Datos Generales</h2>
+      <label>Programa Académico:
+        <input type="text" name="programaAcademico" />
+      </label>
+      <fieldset>
+        <legend>Empresa</legend>
+        <label>Nombre:
+          <input type="text" name="empresa.nombre" />
+        </label>
+        <label>Razón Social:
+          <input type="text" name="empresa.razonSocial" />
+        </label>
+        <label>Domicilio:
+          <input type="text" name="empresa.domicilio" />
+        </label>
+        <label>Teléfono:
+          <input type="tel" name="empresa.telefono" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Externo</legend>
+        <label>Nombre:
+          <input type="text" name="asesorExterno.nombre" />
+        </label>
+        <label>Puesto:
+          <input type="text" name="asesorExterno.puesto" />
+        </label>
+        <label>Email:
+          <input type="email" name="asesorExterno.email" />
+        </label>
+        <label>Teléfono:
+          <input type="tel" name="asesorExterno.telefono" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Interno</legend>
+        <label>Nombre:
+          <input type="text" name="asesorInterno.nombre" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Director del P.A.</legend>
+        <label>Nombre:
+          <input type="text" name="directorPA.nombre" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Alumno</legend>
+        <label>Matrícula:
+          <input type="text" name="datosAlumno.matricula" />
+        </label>
+        <label>Nombre:
+          <input type="text" name="datosAlumno.nombre" />
+        </label>
+        <label>Email:
+          <input type="email" name="datosAlumno.email" />
+        </label>
+      </fieldset>
+      <label>Proceso Evaluado:
+        <select name="procesoEvaluado">
+          <option value="E-1">Estancia 1 (E-1)</option>
+          <option value="E-2">Estancia 2 (E-2)</option>
+          <option value="EST">Estadía (EST)</option>
+        </select>
+      </label>
+      <label>Nombre del Proyecto:
+        <input type="text" name="nombreProyecto" />
+      </label>
+      <label>Objetivo del Proyecto:
+        <textarea name="objetivoProyecto" rows="2"></textarea>
+      </label>
+      <label>Periodo de Realización:
+        <input type="text" name="periodoRealizacion" />
+      </label>
+    </section>
+
+    <section>
+      <h2>Actividad Semanal</h2>
+      <table id="tablaActividades">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Descripción</th>
+            <th colspan="15">Semanas 1–15</th>
+          </tr>
+          <tr>
+            <th></th><th></th>
+            <!-- generar del 1 al 15 -->
+            <script>
+              for(let w=1;w<=15;w++){
+                document.write(`<th>${w}</th>`);
+              }
+            </script>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- filas dinámicas desde JS -->
+        </tbody>
+      </table>
+      <button type="button" id="btnAgregar">Agregar Actividad</button>
+    </section>
+
+    <section>
+      <h2>Revisiones</h2>
+      <fieldset>
+        <legend>Asesor Externo</legend>
+        <label>Primer Reporte - Firma:
+          <input type="text" name="revisiones.asesorExterno.primerReporte.firma" />
+        </label>
+        <label>Sello:
+          <input type="text" name="revisiones.asesorExterno.primerReporte.sello" />
+        </label>
+        <!-- repetir para segundo y final -->
+      </fieldset>
+      <fieldset>
+        <legend>Asesor Interno</legend>
+        <label>Primer Reporte - Firma:
+          <input type="text" name="revisiones.asesorInterno.primerReporte.firma" />
+        </label>
+        <!-- repetir para segundo y final -->
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Observaciones</h2>
+      <textarea name="observaciones" rows="3"></textarea>
+    </section>
+
+    <button type="button" id="btnCargar">Cargar JSON</button>
+    <button type="button" id="btnGuardar">Exportar JSON</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>
+```
+
+---
+
+## 3. CSS (styles.css)
+
+```css
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+h1, h2 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+form section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.2rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border: 1px solid #bbb;
+  padding: 0.4rem;
+  text-align: center;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  background: #0069d9;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0053ba;
+}
+```
+
+---
+
+## 4. JavaScript (script.js)
+
+```javascript
+// Hover: manejar la tabla de actividades y JSON
+
+let data = null;
+const tblBody = document.querySelector('#tablaActividades tbody');
+const btnAgregar = document.querySelector('#btnAgregar');
+const btnGuardar = document.querySelector('#btnGuardar');
+const btnCargar = document.querySelector('#btnCargar');
+
+function crearFila(act) {
+  const tr = document.createElement('tr');
+  tr.dataset.id = act.id;
+  tr.innerHTML = `
+    <td>${act.id}</td>
+    <td>
+      <input type="text"
+        value="${act.descripcion}"
+        onchange="actualizarActividad(${act.id}, 'descripcion', this.value)"
+      />
+    </td>
+    ${Array.from({ length: 15 }, (_, i) => {
+      const semana = i + 1;
+      const pChecked = act.semanasProgramadas.includes(semana) ? 'checked' : '';
+      const eChecked = act.semanasEjecutadas.includes(semana)   ? 'checked' : '';
+      return `
+        <td>
+          <label>P:<input type="checkbox" ${pChecked}
+            onchange="toggleSemana(${act.id}, 'Programada', ${semana}, this.checked)"
+          /></label>
+          <label>E:<input type="checkbox" ${eChecked}
+            onchange="toggleSemana(${act.id}, 'Ejecutada', ${semana}, this.checked)"
+          /></label>
+        </td>`;
+    }).join('')}
+  `;
+  return tr;
+}
+
+function renderTabla() {
+  tblBody.innerHTML = '';
+  data.actividades.forEach(act => tblBody.appendChild(crearFila(act)));
+}
+
+btnAgregar.addEventListener('click', () => {
+  const id = data.actividades.length + 1;
+  data.actividades.push({
+    id, descripcion: '', semanasProgramadas: [], semanasEjecutadas: []
+  });
+  renderTabla();
+});
+
+function actualizarActividad(id, campo, valor) {
+  const act = data.actividades.find(a => a.id === id);
+  act[campo] = valor;
+}
+
+function toggleSemana(id, tipo, semana, estado) {
+  const act = data.actividades.find(a => a.id === id);
+  const key = tipo === 'Programada' ? 'semanasProgramadas' : 'semanasEjecutadas';
+  if (estado) {
+    if (!act[key].includes(semana)) act[key].push(semana);
+  } else {
+    act[key] = act[key].filter(s => s !== semana);
+  }
+}
+
+btnGuardar.addEventListener('click', () => {
+  // recolectar todo el form en el objeto data
+  const form = document.getElementById('formSeguimiento');
+  new FormData(form).forEach((v, k) => {
+    const path = k.split('.');
+    let obj = data;
+    for (let i = 0; i < path.length - 1; i++) {
+      obj = obj[path[i]];
+    }
+    obj[path[path.length - 1]] = v;
+  });
+  const json = JSON.stringify(data, null, 2);
+  console.log(json);
+  alert('JSON exportado a consola');
+});
+
+btnCargar.addEventListener('click', () => {
+  const texto = prompt('Pega aquí tu JSON:');
+  try {
+    data = JSON.parse(texto);
+    // poblar inputs
+    const form = document.getElementById('formSeguimiento');
+    new FormData(form).forEach((_, k) => {
+      const path = k.split('.');
+      let obj = data;
+      for (let i = 0; i < path.length - 1; i++) {
+        obj = obj[path[i]];
+      }
+      const val = obj[path[path.length - 1]];
+      const input = form.querySelector(`[name="${k}"]`);
+      if (input) input.value = val || '';
+    });
+    renderTabla();
+  } catch (e) {
+    alert('JSON inválido');
+  }
+});
+
+// inicio con esquema vacío
+data = {
+  programaAcademico: "",
+  empresa: { nombre:"", razonSocial:"", domicilio:"", telefono:"", sello:"" },
+  asesorExterno: { nombre:"",
