@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventario / Cronología</title>
+</head>
+<body>
+  <h1>Mi inventario / cronología</h1>
+  <div id="contenido"></div>
+
+  <script>
+    
+fetch('https://raw.githubusercontent.com/ozclef/inventario-cronologia/main/db.json')
+  .then(...)
+    // Usando la ruta local (si index.html y db.json están en la misma carpeta)
+    fetch('db.json')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // Mostrar algo en el HTML
+        const cont = document.getElementById('contenido');
+        cont.innerHTML = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        console.error('Error al cargar JSON:', error);
+      });
+  </script>
+</body>
+</html>
