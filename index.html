@@ -210,13 +210,15 @@ button:hover {
 
     <button type="button" id="btnCargar">Cargar JSON</button>
     <button type="button" id="btnGuardar">Exportar JSON</button>
+    <button type="button" onclick="window.print()">Imprimir PDF</button>
   </form>
 
   <script src="script.js"></script>
   <script>
-    
+    /*
 4. JavaScript (script.js)
 // Hover: manejar la tabla de actividades y JSON
+*/
 
 let data = null;
 const tblBody = document.querySelector('#tablaActividades tbody');
@@ -323,9 +325,21 @@ btnCargar.addEventListener('click', () => {
 data = {
   programaAcademico: "",
   empresa: { nombre:"", razonSocial:"", domicilio:"", telefono:"", sello:"" },
-  asesorExterno: { nombre:"",
+  asesorExterno: { nombre:"Oscar Cruz Díaz",
 
     }};
+
+
+    /* ==============================  */
+    document.querySelector('[name="fecha"]').value = new Date().toISOString().slice(0,10);
+localStorage.setItem('seguimientoData', JSON.stringify(data));
+// al cargar:
+const saved = localStorage.getItem('seguimientoData');
+if (saved) cargarJSON(saved);
+
+
+import html2pdf from 'html2pdf.js';
+html2pdf().from(document.body).save('seguimiento.pdf');
   </script>
 </body>
 </html>
